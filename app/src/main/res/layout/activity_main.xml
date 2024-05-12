@@ -17,12 +17,12 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins"
         android:layout_marginStart="18dp"
-        android:text="@string/note_text"
+        android:text="@string/todo_text"
         android:textSize="24sp"
          />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/noteRecyclerView"
+        android:id="@+id/todoRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"

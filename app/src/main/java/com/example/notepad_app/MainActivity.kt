@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
 
         db = TODODatabaseHelper(this)
         adapter = TODOAdapter(db.getAllTodo(), this)
-        binding.noteRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.noteRecyclerView.adapter = adapter
+        binding.todoRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.todoRecyclerView.adapter = adapter
 
 
         binding.Addbtn.setOnClickListener {

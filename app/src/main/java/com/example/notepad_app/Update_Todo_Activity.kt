@@ -4,16 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.notepad_app.databinding.ActivityUpdateNoteBinding
+import com.example.notepad_app.databinding.ActivityUpdateTodoBinding
 
 class Update_Todo_Activity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityUpdateNoteBinding
+    private lateinit var binding: ActivityUpdateTodoBinding
     private  lateinit var db:TODODatabaseHelper
     private var todoId: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityUpdateNoteBinding.inflate(layoutInflater)
+        binding = ActivityUpdateTodoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
             db = TODODatabaseHelper(this)
@@ -46,16 +46,17 @@ class Update_Todo_Activity : AppCompatActivity() {
             val content = binding.editTaskDiscription.text.toString()
             val date = "${binding.editTaskDate.dayOfMonth}/${binding.editTaskDate.month + 1}/${binding.editTaskDate.year}"
             val time = "${binding.editTaskTime.hour}:${binding.editTaskTime.minute}"
-            val todo = Note(
+            val todo = Todo(
                 todoId,
                 title,
                 content,
                 date,
-                time
+                time,
+                0
             )
             db.updateTodo(todo)
             finish()
-            Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Todo updated", Toast.LENGTH_SHORT).show()
 
         }
         binding.editBackButton.setOnClickListener {

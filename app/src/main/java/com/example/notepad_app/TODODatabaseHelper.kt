@@ -18,10 +18,11 @@ companion object {
     private const val CONTENT = "content"
     private const val DATE = "date"
     private const val TIME = "time"
+    private const val STATUS = "status"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-       val createTable = "CREATE TABLE $TABLE_NAME ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $TITLE TEXT, $CONTENT TEXT, $DATE TEXT, $TIME TEXT)"
+       val createTable = "CREATE TABLE $TABLE_NAME ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $TITLE TEXT, $CONTENT TEXT, $DATE TEXT, $TIME TEXT,$STATUS INTEGER DEFAULT 0)"
         db?.execSQL(createTable)
     }
 
@@ -31,13 +32,14 @@ companion object {
         onCreate(db)
     }
 
-    fun insertTodo (todo: Note): Boolean {
+    fun insertTodo (todo: Todo): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(TITLE, todo.title)
             put(CONTENT, todo.content)
             put(DATE, todo.date)
             put(TIME, todo.time)
+            put(STATUS, 0)
         }
 
         val success = db.insert(TABLE_NAME, null, values)
@@ -45,8 +47,8 @@ companion object {
         return (Integer.parseInt("$success") != -1)
     }
 
-    fun getAllTodo(): List<Note> {
-        val list = mutableListOf<Note>()
+    fun getAllTodo(): List<Todo> {
+        val list = mutableListOf<Todo>()
         val db = readableDatabase
         val selectALLQuery = "SELECT * FROM $TABLE_NAME"
         val cursor = db.rawQuery(selectALLQuery, null)
@@ -58,7 +60,8 @@ companion object {
                     val content = cursor.getString(cursor.getColumnIndexOrThrow(CONTENT))
                     val date = cursor.getString(cursor.getColumnIndexOrThrow(DATE))
                     val time = cursor.getString(cursor.getColumnIndexOrThrow(TIME))
-                    val todo = Note (id, title, content, date, time)
+                    val status = cursor.getInt(cursor.getColumnIndexOrThrow(STATUS))
+                    val todo = Todo (id, title, content, date, time,status)
                     list.add(todo)
                 } while (cursor.moveToNext())
             }
@@ -68,7 +71,7 @@ companion object {
         return list
     }
 
-    fun updateTodo(todo: Note){
+    fun updateTodo(todo: Todo){
         val db = writableDatabase
         val values = ContentValues().apply {
             put(TITLE, todo.title)
@@ -83,7 +86,7 @@ companion object {
 
     }
 
-    fun getTodoById(todoId:Int): Note {
+    fun getTodoById(todoId:Int): Todo {
         val db = readableDatabase
         val selectQuery = "SELECT * FROM $TABLE_NAME WHERE $ID = $todoId"
         val cursor = db.rawQuery(selectQuery, null)
@@ -94,10 +97,11 @@ companion object {
         val content = cursor.getString(cursor.getColumnIndexOrThrow(CONTENT))
         val date = cursor.getString(cursor.getColumnIndexOrThrow(DATE))
         val time = cursor.getString(cursor.getColumnIndexOrThrow(TIME))
+        val status = cursor.getInt(cursor.getColumnIndexOrThrow(STATUS))
 
         cursor.close()
         db.close()
-        return Note (id, title, content, date, time)
+        return Todo (id, title, content, date, time,status)
 
     }
     fun deleteTodoById(todoId: Int){
@@ -105,6 +109,16 @@ companion object {
         val whereClause = "$ID = ?"
         val whereArgs = arrayOf(todoId.toString())
         db.delete(TABLE_NAME, whereClause, whereArgs)
+        db.close()
+    }
+    fun updateTodoStatus(todoId: Int, newStatus: Int) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(STATUS, newStatus)
+        }
+        val whereClause = "$ID = ?"
+        val whereArgs = arrayOf(todoId.toString())
+        db.update(TABLE_NAME, values, whereClause, whereArgs)
         db.close()
     }
 
