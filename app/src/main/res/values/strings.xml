@@ -4,4 +4,10 @@
     <string name="enter_task">Enter Task</string>
     <string name="date_text">Date:"</string>
     <string name="Time_text">Time:</string>
+    <string name="note_text">Notes</string>
+    <string name="cart_title">Title</string>
+    <string name="cart_desc">Description</string>>
+    <string name="cart_date">Date</string>
+    <string name="cart_time">Time</string>
+
 </resources>

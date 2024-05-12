@@ -1,5 +1,6 @@
 package com.example.notepad_app
 
+
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -30,7 +31,7 @@ companion object {
         onCreate(db)
     }
 
-    fun insertnote (note: note): Boolean {
+    fun insertnote (note: Note): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(TITLE, note.title)
@@ -42,6 +43,29 @@ companion object {
         val success = db.insert(TABLE_NAME, null, values)
         db.close()
         return (Integer.parseInt("$success") != -1)
+    }
+
+    fun getAllNotes(): List<Note> {
+        val list = mutableListOf<Note>()
+        val db = readableDatabase
+        val selectALLQuery = "SELECT * FROM $TABLE_NAME"
+        val cursor = db.rawQuery(selectALLQuery, null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    val id = cursor.getInt(cursor.getColumnIndexOrThrow(ID))
+                    val title = cursor.getString(cursor.getColumnIndexOrThrow(TITLE))
+                    val content = cursor.getString(cursor.getColumnIndexOrThrow(CONTENT))
+                    val date = cursor.getString(cursor.getColumnIndexOrThrow(DATE))
+                    val time = cursor.getString(cursor.getColumnIndexOrThrow(TIME))
+                    val note = Note (id, title, content, date, time)
+                    list.add(note)
+                } while (cursor.moveToNext())
+            }
+        }
+        cursor.close()
+        db.close()
+        return list
     }
 }
 
