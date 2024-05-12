@@ -2,5 +2,6 @@
     <string name="app_name">notepad-app</string>
     <string name="add_task">Add Task.</string>
     <string name="enter_task">Enter Task</string>
-
+    <string name="date_text">Date:"</string>
+    <string name="Time_text">Time:</string>
 </resources>
