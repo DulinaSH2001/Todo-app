@@ -5,6 +5,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class TODODatabaseHelper (context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -32,21 +34,21 @@ companion object {
         onCreate(db)
     }
 
-    fun insertTodo (todo: Todo): Boolean {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(TITLE, todo.title)
-            put(CONTENT, todo.content)
-            put(DATE, todo.date)
-            put(TIME, todo.time)
-            put(STATUS, 0)
+    suspend fun insertTodoAsync(todo: Todo): Boolean {
+        return withContext(Dispatchers.IO) {
+            val db = writableDatabase
+            val values = ContentValues().apply {
+                put(TITLE, todo.title)
+                put(CONTENT, todo.content)
+                put(DATE, todo.date)
+                put(TIME, todo.time)
+                put(STATUS, 0)
+            }
+            val success = db.insert(TABLE_NAME, null, values)
+            db.close()
+            success != -1L
         }
-
-        val success = db.insert(TABLE_NAME, null, values)
-        db.close()
-        return (Integer.parseInt("$success") != -1)
     }
-
     fun getAllTodo(): List<Todo> {
         val list = mutableListOf<Todo>()
         val db = readableDatabase
