@@ -6,7 +6,7 @@
     android:background="@color/lightgreen"
     android:fillViewport="true"
     android:padding="16dp"
-    tools:context=".Addnote">
+    tools:context=".AddTodo">
 
     <RelativeLayout
         android:layout_width="match_parent"

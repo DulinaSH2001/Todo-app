@@ -6,7 +6,7 @@
     android:background="@color/lightgreen"
     android:fillViewport="true"
     android:padding="16dp"
-    tools:context=".Update_NoteActivity">
+    tools:context=".Update_Todo_Activity">
 
     <RelativeLayout
         android:layout_width="match_parent"

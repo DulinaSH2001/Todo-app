@@ -1,42 +1,43 @@
 package com.example.notepad_app
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.notepad_app.databinding.ActivityUpdateNoteBinding
 
-class Update_NoteActivity : AppCompatActivity() {
+class Update_Todo_Activity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdateNoteBinding
-    private  lateinit var db:NoteDatabaseHelper
-    private var noteId: Int = -1
+    private  lateinit var db:TODODatabaseHelper
+    private var todoId: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdateNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-            db = NoteDatabaseHelper(this)
-        noteId = intent.getIntExtra("note_id", -1)
-        if (noteId == -1) {
+            db = TODODatabaseHelper(this)
+        todoId = intent.getIntExtra("todo_id", -1)
+        if (todoId == -1) {
             finish()
             return
         }
-        val note = db.getNoteById(noteId)
-        binding.editTaskInput.setText(note.title)
-        binding.editTaskDiscription.setText(note.content)
+        val todo = db.getTodoById(todoId)
+        binding.editTaskInput.setText(todo.title)
+        binding.editTaskDiscription.setText(todo.content)
 
-        val dateParts = note.date.split("/")
+        val dateParts = todo.date.split("/")
         val day = dateParts[0].toInt()
-        val month = dateParts[1].toInt() - 1 // Subtract 1 because months are zero-indexed
+        val month = dateParts[1].toInt() - 1
         val year = dateParts[2].toInt()
 
 
         binding.editTaskDate.updateDate(year, month, day)
-        val timeParts = note.time.split(":")
+        val timeParts = todo.time.split(":")
         val hour = timeParts[0].toInt()
         val minute = timeParts[1].toInt()
 
-// Set time in TimePicker (assuming editTaskTime is a TimePicker)
+
         binding.editTaskTime.hour = hour
         binding.editTaskTime.minute = minute
 
@@ -45,18 +46,26 @@ class Update_NoteActivity : AppCompatActivity() {
             val content = binding.editTaskDiscription.text.toString()
             val date = "${binding.editTaskDate.dayOfMonth}/${binding.editTaskDate.month + 1}/${binding.editTaskDate.year}"
             val time = "${binding.editTaskTime.hour}:${binding.editTaskTime.minute}"
-            val note = Note(
-                noteId,
+            val todo = Note(
+                todoId,
                 title,
                 content,
                 date,
                 time
             )
-            db.updateNote(note)
+            db.updateTodo(todo)
             finish()
             Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show()
 
         }
+        binding.editBackButton.setOnClickListener {
+            navigateToMain()
+        }
 
+    }
+    private fun navigateToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

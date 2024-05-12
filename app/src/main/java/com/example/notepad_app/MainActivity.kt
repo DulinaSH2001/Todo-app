@@ -8,22 +8,22 @@ import com.example.notepad_app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var db: NoteDatabaseHelper
-    private lateinit var adapter: NoteAdapter
+    private lateinit var db: TODODatabaseHelper
+    private lateinit var adapter: TODOAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        db = NoteDatabaseHelper(this)
-        adapter = NoteAdapter(db.getAllNotes(), this)
+        db = TODODatabaseHelper(this)
+        adapter = TODOAdapter(db.getAllTodo(), this)
         binding.noteRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.noteRecyclerView.adapter = adapter
 
 
         binding.Addbtn.setOnClickListener {
-            val intent = Intent (this,Addnote::class.java)
+            val intent = Intent (this,AddTodo::class.java)
             startActivity(intent)
         }
 
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        adapter.refresh(db.getAllNotes())
+        adapter.refresh(db.getAllTodo())
     }
 
 }
